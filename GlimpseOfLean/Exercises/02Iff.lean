@@ -35,7 +35,12 @@ prove one-by-one.
 -/
 
 example (a b : ℝ) (ha : 0 < a) (hb : 0 < b) : 0 < a^2 + b^2 := by {
-  sorry
+  apply add_pos
+  apply sq_pos_of_pos
+  exact ha
+
+  apply sq_pos_of_pos
+  exact hb
 }
 
 /-
@@ -58,9 +63,14 @@ example (a : ℝ) (ha : 0 < a) : 0 < (a^2)^2 := by {
 
 /- Now prove the same lemma as before using forwards reasoning. -/
 
-example (a b : ℝ) (ha : 0 < a) (hb : 0 < b) : 0 < a^2 + b^2 := by {
-  sorry
-}
+example (a b : ℝ) (ha : 0 < a) (hb : 0 < b) : 0 < a^2 + b^2 := by
+  have h2 : 0 < a^2
+  · apply sq_pos_of_pos
+    exact ha
+  have h3 : 0 < b^2
+  · apply sq_pos_of_pos
+    exact hb
+  exact add_pos h2 h3
 
 
 /- ## Proving implications
@@ -78,7 +88,8 @@ example (a : ℝ) : a > 0 → b > 0 → a + b > 0 := by {
 /- Now prove the following simple statement in propositional logic.
 Note that `p → q → r` means `p → (q → r)`. -/
 example (p q r : Prop) : (p → q) → (p → q → r) → p → r := by {
-  sorry
+  intro ha hb p
+  exact hb p (ha p)
 }
 
 /- # Equivalences
@@ -109,7 +120,10 @@ Let's prove a variation
 -/
 
 example {a b : ℝ} (c : ℝ) : a + c ≤ b + c ↔ a ≤ b := by {
-  sorry
+  rw [← sub_nonneg]
+  have key : (b + c) - (a + c) = b - a
+  · ring
+  rw [key, sub_nonneg]
 }
 
 /-
